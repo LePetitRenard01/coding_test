@@ -15,6 +15,7 @@ if __name__ == '__main__':
   
   maxWeight = 0
   res = 0
+  cnt = 0
   for i in graph:
     p1 = find(i[0])
     p2 = find(i[1])
@@ -24,7 +25,10 @@ if __name__ == '__main__':
       parent[p1] = p2
     else:
       parent[p2] = p1
-    maxWeight = max(maxWeight, i[2])
+    maxWeight = i[2]
     res += i[2]
+    cnt += 1
+    if cnt == n-1:
+      break
   
   print(res - maxWeight)
