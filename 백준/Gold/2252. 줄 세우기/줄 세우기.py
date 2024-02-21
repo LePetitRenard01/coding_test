@@ -1,20 +1,34 @@
+#topological
+# queue
 from sys import stdin
-def topological_sort(visited,s):
-  visited[s] = True
-  for i in graph[s]:
-    if not visited[i]:
-      topological_sort(visited,i)
-  stack.append(s)
-if __name__ == '__main__':
-  n, m = map(int,input().split())
-  graph = [[]for _ in range(n+1)]
+from collections import deque
+def solution():
+  n, m = map(int, stdin.readline().split())
+  inDegree = [0] * (n+1)
+  edge = [[] for _ in range(n+1)]
   for _ in range(m):
-    tmp = list(map(int,stdin.readline().split()))
-    graph[tmp[0]].append(tmp[1])
+    a, b = map(int, stdin.readline().split())
+    inDegree[b] += 1
+    edge[a].append(b)
   
-  stack = []
-  visited = [False] * (n+1)
+  q = deque()
   for i in range(1, n+1):
-    if not visited[i]:
-      topological_sort(visited,i)
-  print(*stack[::-1])
+    if inDegree[i] == 0:
+      q.append(i)
+  
+  res = []
+  while q:
+    current = q.pop()
+    res.append(current)
+    for next in edge[current]:
+      inDegree[next] -= 1
+      if inDegree[next] == 0:
+        q.append(next)
+  
+  if len(res) != n :
+    print(-1)
+  else:
+    print(*res)
+
+if __name__ == '__main__':
+  solution()
