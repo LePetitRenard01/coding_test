@@ -1,0 +1,58 @@
+import java.util.*;
+import java.lang.Math;
+class Solution {
+    final String lastTime = "23:59";
+    public int[] solution(int[] fees, String[] records) {
+        HashMap<String, Integer> sumOfTime = new HashMap<>();
+        HashMap<String, Integer> time = new HashMap<>();
+        for(String record : records){
+            String[] r = record.split(" ");
+            int now = transformTime(r[0]);
+            String num = r[1];
+            if(r[2].equals("IN")){
+                time.put(num, now);
+            }
+            else{
+                int term = now - time.get(num);
+                time.remove(num);
+                sumOfTime.put(num, sumOfTime.getOrDefault(num, 0)+term);
+            }
+        }
+        
+        Object[] remains = time.keySet().toArray();
+        for(int i = 0; i < remains.length; i++){
+            String num = (String)remains[i];
+            int term = transformTime(lastTime)-time.get(num);
+            sumOfTime.put(num, sumOfTime.getOrDefault(num, 0)+term);
+        }
+        
+        Object[] nums = sumOfTime.keySet().toArray();
+        Arrays.sort(nums, new Comparator<>(){
+            public int compare(Object a, Object b){
+                String s1 = (String)a;
+                String s2 = (String)b;
+                return s1.compareTo(s2);
+            }
+        });
+        
+        int[] answer = new int[nums.length];
+        for(int i = 0; i < answer.length; i++){
+            answer[i] = charge(sumOfTime.get((String)nums[i]), fees);
+        }
+        return answer;
+    }
+    
+    int charge(int time, int[] fees){
+        if(time<fees[0]) return fees[1];
+        return (int)(Math.ceil((double)((time-fees[0])*1.0/fees[2]))*fees[3]) + fees[1];
+    }
+    
+    int transformTime(String time){
+        int result = 0;
+        String[] times = time.split(":");
+        int hour = Integer.valueOf(times[0]);
+        int min = Integer.valueOf(times[1]);
+        result = hour*60 + min;
+        return result;
+    }
+}
