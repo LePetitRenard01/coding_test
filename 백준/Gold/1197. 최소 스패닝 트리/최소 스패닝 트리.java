@@ -33,7 +33,7 @@ public class Main {
         v = Integer.parseInt(st.nextToken());
         e = Integer.parseInt(st.nextToken());
 
-        bw.write(prim()+"");
+        bw.write(kruskal()+"");
         bw.flush();
         bw.close();
         br.close();
@@ -116,13 +116,13 @@ public class Main {
     }
 
     static boolean union(int parent[], int i, int j){
-        parent[i] = find(parent, i);
-        parent[j] = find(parent, j);
-        if(parent[i] == parent[j]) return false;
-        else if(parent[i] > parent[j])
-            parent[j] = parent[i];
+        int parentA = find(parent, i);
+        int parentB = find(parent, j);
+        if(parentA == parentB) return false;
+        else if(parentA > parentB)
+            parent[parentA] = parentB;
         else
-            parent[i] = parent[j];
+            parent[parentB] = parentA;
         return true;
     }
 }
